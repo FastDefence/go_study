@@ -9,7 +9,8 @@ import (
 func main() {
 	// JSON で現在時刻を返す API
 	http.HandleFunc("/api/time", func(w http.ResponseWriter, r *http.Request) {
-		now := time.Now().Format(time.RFC3339)
+		jst := time.FixedZone("Asia/Tokyo", 9*60*60) // JST (UTC+9)
+		now := time.Now().In(jst).Format(time.RFC3339)
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintf(w, `{"now":"%s"}`, now)
 	})
@@ -30,6 +31,7 @@ func main() {
 </head>
 <body>
   <h1>Current time</h1>
+  <h3>JST </h3>
   <div id="clock">loading…</div>
 
   <script>
